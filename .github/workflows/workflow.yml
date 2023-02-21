@@ -1,4 +1,4 @@
-name: MSBuild
+name: "Automated Workflow"
 
 on:
   push:
@@ -22,28 +22,22 @@ jobs:
   build:
     runs-on: windows-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-        
     steps:
     - uses: actions/checkout@v3
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Install dependencies
-      run: npm ci
 
     - name: Setup MSBUILD
       uses: microsoft/setup-msbuild@v1.0.2
 
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - name: Install Node dependencies
+      run: npm ci
+
     - name: Build
       working-directory: ${{env.SOLUTION_FILE_PATH}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /t:rebuild /restore 
       
     - name: Upload Build Artifact
