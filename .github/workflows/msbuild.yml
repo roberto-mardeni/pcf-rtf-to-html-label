@@ -37,8 +37,6 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - run: npm run build --if-present
-
     - name: Setup MSBUILD
       uses: microsoft/setup-msbuild@v1.0.2
 
